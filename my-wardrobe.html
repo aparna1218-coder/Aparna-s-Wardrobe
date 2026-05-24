@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="My Wardrobe">
+<title>My Wardrobe</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:#F5F1EB;font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:#1c1c1c}
+h1{font-family:Georgia,serif;font-style:italic;font-weight:400}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+header{background:#F5F1EB;position:sticky;top:0;z-index:10;border-bottom:1px solid #e5e0d8}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px}
+nav{display:flex;gap:4px}
+.nb{background:none;border:none;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border-radius:100px;color:#777}
+.nb.on{background:#1c1c1c;color:#fff}
+.pills{display:flex;gap:8px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.pills::-webkit-scrollbar{display:none}
+.pill{flex-shrink:0;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:5px 13px;border-radius:100px;cursor:pointer;border:1.5px solid #d5cfc5;background:transparent;color:#666}
+.pill.on{background:#1c1c1c;color:#fff;border-color:#1c1c1c}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.card{background:#fff;border-radius:14px;overflow:hidden;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.card:active{opacity:.85}
+.cimg{width:100%;aspect-ratio:3/4;background:#f5f0e8;display:flex;align-items:center;justify-content:center;font-size:40px;position:relative;overflow:hidden}
+.cimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cbody{padding:10px 12px 13px}
+.cname{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+.drow{display:flex;align-items:center;gap:5px}
+.dot{width:8px;height:8px;border-radius:50%;border:1px solid rgba(0,0,0,.12);flex-shrink:0}
+.dlbl{font-size:11px;color:#aaa}
+.btn{font-size:13px;font-weight:600;padding:11px 20px;border-radius:100px;border:none;cursor:pointer;-webkit-appearance:none}
+.bd{background:#1c1c1c;color:#fff}
+.bd:disabled{background:#bbb}
+.bo{background:transparent;color:#1c1c1c;border:1.5px solid #1c1c1c}
+.bg{background:transparent;color:#c0392b;border:none;font-size:13px;font-weight:500;padding:10px 16px;cursor:pointer}
+.empty{text-align:center;padding:80px 0}
+.fw{max-width:520px;padding:20px 0 80px}
+.back{background:none;border:none;font-size:22px;color:#888;cursor:pointer;padding:4px 12px 4px 0;margin-bottom:14px}
+.sb{background:#fff;border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:100px;background:#f0ece5;color:#888;margin-bottom:8px}
+.lbl{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#999;margin-bottom:5px;display:block}
+input,select{font-family:inherit;font-size:16px;padding:11px 13px;border:1.5px solid #ddd8d0;border-radius:10px;background:#fff;width:100%;outline:none;color:#1c1c1c;-webkit-appearance:none}
+input:focus,select:focus{border-color:#1c1c1c}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.crow{display:flex;align-items:center;gap:8px}
+.cdot{width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.15);flex-shrink:0}
+.uz{border:2px dashed #d5cfc5;border-radius:13px;padding:28px 16px;text-align:center;cursor:pointer;background:#faf7f2}
+.uz:active{background:#f0ece5}
+.pw{position:relative;display:inline-block}
+.pw img{width:130px;height:164px;object-fit:cover;border-radius:11px;display:block}
+.rb{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.55);border:none;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ir{display:flex;gap:8px;margin-top:10px}
+.ir input{flex:1;min-width:0}
+.err{font-size:12px;color:#c0392b;margin-top:6px}
+.srow{display:flex;gap:10px;align-items:center;margin-top:22px}
+.ow{max-width:580px;padding:20px 0 80px}
+.ctrl{background:#fff;border-radius:14px;padding:16px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.stip{background:#1c1c1c;color:#F5F1EB;border-radius:13px;padding:15px 17px;margin-bottom:14px}
+.stip .sl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.5;margin-bottom:5px}
+.stip p{font-size:14px;line-height:1.6}
+.oi{background:#fff;border-radius:14px;padding:13px;display:flex;align-items:center;gap:13px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.oth{width:56px;height:70px;border-radius:9px;background:#f5f0e8;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;position:relative;overflow:hidden}
+.oth img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.oin{flex:1;min-width:0}
+.onm{font-size:14px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sh{background:#fff;border-radius:22px 22px 0 0;padding:26px 20px 44px;width:100%;max-width:480px}
+.sc{background:#faf7f2;border-radius:11px;padding:15px;margin-bottom:10px}
+.scl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#888;margin-bottom:4px}
+.scd{font-size:13px;color:#aaa;margin-bottom:11px}
+.wb{background:#fff3cd;border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;color:#856404;line-height:1.5}
+.br{display:flex;gap:8px}
+.toast{position:fixed;bottom:36px;left:50%;transform:translateX(-50%);background:#1c1c1c;color:#fff;font-size:13px;font-weight:500;padding:10px 22px;border-radius:100px;z-index:100;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+.chip{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:100px;cursor:pointer;border:1.5px solid #d5cfc5;background:transparent;color:#666;user-select:none}
+.chip.on{background:#1c1c1c;color:#fff;border-color:#1c1c1c}
+.szrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.szchip{display:inline-block;font-size:12px;font-weight:600;padding:5px 12px;border-radius:8px;cursor:pointer;border:1.5px solid #d5cfc5;background:transparent;color:#666;user-select:none}
+.szchip.on{background:#1c1c1c;color:#fff;border-color:#1c1c1c}
+.szcx{margin-top:8px;font-size:16px;padding:10px 12px;border:1.5px solid #ddd8d0;border-radius:10px;background:#fff;width:100%;outline:none;color:#1c1c1c;-webkit-appearance:none}
+.szcx:focus{border-color:#1c1c1c}
+.hi{display:none!important}
+.imgoverlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.imgoverlay img{max-width:92vw;max-height:88vh;object-fit:contain;border-radius:12px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="hdr">
+  <div>
+    <h1 id="ttl" style="font-size:34px;line-height:1">My Wardrobe</h1>
+    <p id="cnt" style="font-size:13px;color:#aaa;margin-top:2px"></p>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="btn bo" style="font-size:12px;padding:8px 14px" onclick="openBkp()">Backup</button>
+    <button class="btn bd" style="padding:8px 16px;font-size:13px" onclick="goAdd()">+ Add</button>
+  </div>
+</div>
+<nav>
+  <button class="nb on" id="nw" onclick="goTab(this.dataset.t)" data-t="w">Wardrobe</button>
+  <button class="nb" id="no" onclick="goTab(this.dataset.t)" data-t="o">Outfit of the Day</button>
+</nav>
+</div></header>
+<div id="tw" class="wrap" style="padding-top:4px">
+  <div class="pills" id="pills"></div>
+  <div class="grid" id="grid"></div>
+  <div class="empty hi" id="emp">
+    <div style="font-size:52px;margin-bottom:12px" id="ei"></div>
+    <p style="font-size:15px;color:#bbb" id="ep"></p>
+  </div>
+</div>
+<div id="ta" class="wrap hi"><div class="fw">
+  <button class="back" onclick="goTab(this.dataset.t)" data-t="w">&#8592;</button>
+  <h1 id="ftl" style="font-size:26px;margin-bottom:20px">Add New Item</h1>
+  <div class="sb">
+    <span class="tag">Import from store</span>
+    <p style="font-size:13px;color:#888;margin-bottom:10px">Paste a product URL to auto-fill details. <span style="color:#b0956a">Photos may need to be added manually.</span></p>
+    <div class="ir">
+      <input type="url" id="iu" placeholder="https://store.com/product/..." inputmode="url">
+      <button class="btn bd" id="ib" onclick="doImp()" style="flex-shrink:0;padding:10px 16px">Import</button>
+    </div>
+    <p class="err hi" id="ie"></p>
+  </div>
+  <div class="sb">
+    <span class="lbl">Photo</span>
+    <div id="uz" class="uz" onclick="triggerFi()">
+      <div style="font-size:30px;margin-bottom:6px">&#128247;</div>
+      <p style="font-size:13px;color:#aaa">Tap to upload a photo</p>
+    </div>
+    <div id="pw" class="pw hi">
+      <img id="pi" src="" alt="preview">
+      <button class="rb" onclick="rmImg()">&#215;</button>
+    </div>
+    <input type="file" id="fi" accept="image/*" class="hi" onchange="handleF(this)">
+  </div>
+  <div class="sb">
+    <div style="margin-bottom:12px"><span class="lbl">Name</span><input type="text" id="fn" placeholder="e.g. Soleil Pant in Linen"></div>
+    <div class="r2" style="margin-bottom:12px">
+      <div><span class="lbl">Category</span><div id="fc" class="szrow"></div></div>
+      <div><span class="lbl">Color</span>
+        <div class="crow"><span class="cdot" id="cd"></span><select id="fco" onchange="upd()"></select></div>
+        <input type="text" id="colorCustom" class="szcx" placeholder="Or type a custom color..." oninput="onCustomColor()" autocomplete="off">
+      </div>
+    </div>
+    <div class="r2" style="margin-bottom:12px">
+      <div><span class="lbl">Occasion</span><div id="fo" class="szrow"></div></div>
+      <div><span class="lbl">Season</span><div id="fs" class="szrow"></div></div>
+    </div>
+    <div style="margin-bottom:12px"><span class="lbl">Notes</span><input type="text" id="fno" placeholder="Fabric, fit, where you got it..."></div>
+    <div id="szSec" style="margin-bottom:12px">
+      <span class="lbl">Size</span>
+      <div class="szrow" id="szChips"></div>
+      <input type="text" id="szCustom" class="szcx" placeholder="Or type a custom size...">
+    </div>
+    <div style="margin-bottom:12px"><span class="lbl">Wash Method</span><div class="szrow" id="washChips"></div></div>
+    <div id="tempSec" style="margin-bottom:12px"><span class="lbl">Water Temperature</span><div class="szrow" id="tempChips"></div></div>
+    <div style="margin-bottom:12px"><span class="lbl">Drying Instructions</span><div class="szrow" id="dryChips"></div></div>
+    <div style="margin-bottom:12px"><span class="lbl">Storage</span><div class="szrow" id="storeChips"></div></div>
+    <input type="text" id="washCustom" class="szcx" placeholder="Any additional care notes...">
+  </div>
+  <div class="srow">
+    <button class="btn bd" onclick="saveIt()" style="flex:1;padding:13px" id="savebtn">Add to Wardrobe</button>
+    <button class="bg hi" id="db" onclick="delIt()">Delete</button>
+    <button class="bg hi" id="dupb" onclick="dupIt()" style="color:#2980b9">Duplicate</button>
+  </div>
+</div></div>
+<div id="to" class="wrap hi"><div class="ow">
+  <h1 style="font-size:28px;margin-bottom:18px">What to wear today</h1>
+  <div class="ctrl">
+    <div class="r2" style="margin-bottom:12px">
+      <div><span class="lbl">Weather</span><select id="ws"></select></div>
+      <div><span class="lbl">Occasion</span><select id="os"></select></div>
+    </div>
+    <button class="btn bd" id="ob" onclick="doOut()" style="width:100%;padding:13px">Suggest an Outfit</button>
+    <p id="on2" class="hi" style="font-size:12px;color:#bbb;text-align:center;margin-top:8px">Add items to your wardrobe first.</p>
+  </div>
+  <div id="st" class="stip hi"><div class="sl">Stylist note</div><p id="sp"></p></div>
+  <div id="ol"></div>
+</div></div>
+<div class="ov hi" id="bov">
+  <div class="sh">
+    <h2 style="font-family:Georgia,serif;font-style:italic;font-weight:400;font-size:24px;margin-bottom:6px">Backup &amp; Restore</h2>
+    <p style="font-size:13px;color:#999;margin-bottom:18px;line-height:1.5">Your wardrobe is saved only on this device. Export to keep a backup or move to another device.</p>
+    <div class="sc"><div class="scl">Export</div><div class="scd" id="exd">Download your items as a backup file.</div><button class="btn bd" onclick="doExp()" style="width:100%">Download Backup</button></div>
+    <div class="sc"><div class="scl">Restore</div><div class="scd">Load a previously saved backup file.</div>
+      <div id="rn"><button class="btn bo" onclick="showWarn()" style="width:100%">Restore from File</button></div>
+      <div id="rw" class="hi"><div class="wb">This will replace your current wardrobe. Make sure you have a backup first.</div>
+        <div class="br"><button class="btn bd" onclick="triggerRi()" style="flex:1;background:#c0392b">Yes, Replace</button>
+        <button class="btn bo" onclick="hideWarn()" style="flex:1">Cancel</button></div>
+      </div>
+      <input type="file" id="ri" accept=".json" class="hi" onchange="doRest(this)">
+    </div>
+    <button onclick="closeBkp()" style="width:100%;background:none;border:none;font-size:13px;color:#999;padding:12px;cursor:pointer;margin-top:4px">Close</button>
+  </div>
+</div>
+<div class="toast hi" id="toast"></div>
+<div class="imgoverlay hi" id="imgOverlay" onclick="closeImg()">
+  <img id="imgOverlayImg" src="" alt="">
+</div>
+<script>
+var CATS=["Tops","Bottoms","Dresses","Outerwear","Shoes","Accessories"];
+var OCCS=["Casual","Work","Formal","Athletic","Weekend","Indian"];
+var COLS=["Black","White","Gray","Navy","Beige","Brown","Red","Pink","Green","Blue","Yellow","Orange","Purple","Multi"];
+var SEAS=["Spring","Summer","Fall","Winter","All Season"];
+var CHEX={Black:"#1a1a1a",White:"#efefef",Gray:"#9e9e9e",Navy:"#1b2a4a",Beige:"#d4b896",Brown:"#7a4f2e",Red:"#c0392b",Pink:"#e88fa0",Green:"#3a7d44",Blue:"#2980b9",Yellow:"#f1c40f",Orange:"#e67e22",Purple:"#8e44ad",Multi:"#c8a4d4"};
+var WS={"Sunny & Warm":["Spring","Summer","All Season"],"Hot":["Summer","All Season"],"Cool":["Fall","Spring","All Season"],"Cold":["Winter","Fall","All Season"],"Rainy":["Fall","Spring","All Season"],"Snowy":["Winter","All Season"]};
+var WASH=["Machine wash","Gentle wash","Hand wash","Dry clean only","Spot clean only","Do not wash"];
+var TEMP=["Cold (30C)","Warm (40C)","Hot (60C)","Do not apply"];
+var DRY=["Tumble dry","Hot dry","Air dry","Lay flat to dry","Hang dry","Dry clean"];
+var STORE=["Hang","Fold","Garment bag","Shelf","Drawer","Shoe box","Box","Jewelry box","Hanging organizer"];
+var SZMAP={Tops:["XS","S","2"],Bottoms:["XS","S","2","4","25","26","27"],Dresses:["XS","S","2"],Outerwear:["XS","S"],Shoes:["7"],Accessories:[]};
+var items=[],editId=null,filterCat="All",curImg=null;
+try{items=JSON.parse(localStorage.getItem("wardrobe_v2"))||[];}catch(e){}
+function sv(){try{localStorage.setItem("wardrobe_v2",JSON.stringify(items));}catch(e){}}
+var toastT;
+function toast(m){var el=document.getElementById("toast");el.textContent=m;el.classList.remove("hi");clearTimeout(toastT);toastT=setTimeout(function(){el.classList.add("hi");},2800);}
+
+function makeOpts(id,opts,any){
+  var el=document.getElementById(id);
+  if(any){var d=document.createElement("option");d.value="";d.textContent=id==="fco"?"— Select color —":"Any";el.appendChild(d);}
+  for(var i=0;i<opts.length;i++){var o=document.createElement("option");o.textContent=opts[i];el.appendChild(o);}
+}
+makeOpts("fco",COLS,true);
+makeOpts("ws",Object.keys(WS),false);
+makeOpts("os",OCCS,true);
+
+function onCustomColor(){if(document.getElementById("colorCustom").value.trim()){document.getElementById("fco").value="";}upd();}
+function upd(){
+  var c=document.getElementById("fco").value;
+  var custom=document.getElementById("colorCustom");
+  if(custom&&custom.value.trim()){document.getElementById("cd").style.background="#ccc";}
+  else{document.getElementById("cd").style.background=CHEX[c]||"#ccc";}
+}
+upd();
+
+function makeChips(container,opts,cls,handler){
+  opts.forEach(function(o){
+    var el=document.createElement("span");
+    el.className=cls;
+    el.textContent=o;
+    el.addEventListener("click",function(){handler(el,o);});
+    container.appendChild(el);
+  });
+}
+
+var fcEl=document.getElementById("fc");
+makeChips(fcEl,CATS,"szchip",function(el,cat){
+  fcEl.querySelectorAll(".szchip").forEach(function(x){x.classList.remove("on");});
+  el.classList.add("on");
+  renderSz(cat);
+});
+fcEl.querySelector(".szchip").classList.add("on");
+
+function renderSz(cat){
+  var sec=document.getElementById("szSec");
+  var box=document.getElementById("szChips");
+  var list=SZMAP[cat]||[];
+  if(!list.length){sec.classList.add("hi");return;}
+  sec.classList.remove("hi");
+  box.innerHTML="";
+  list.forEach(function(s){
+    var el=document.createElement("span");
+    el.className="szchip";
+    el.textContent=s;
+    el.addEventListener("click",function(){
+      box.querySelectorAll(".szchip").forEach(function(x){x.classList.remove("on");});
+      el.classList.add("on");
+      document.getElementById("szCustom").value="";
+    });
+    box.appendChild(el);
+  });
+  document.getElementById("szCustom").value="";
+}
+renderSz("Tops");
+
+function getCat(){var on=fcEl.querySelector(".szchip.on");return on?on.textContent:"Tops";}
+function getSz(){var c=document.getElementById("szCustom").value.trim();if(c)return c;var on=document.getElementById("szChips").querySelector(".szchip.on");return on?on.textContent:"";}
+function getColor(){var c=document.getElementById("colorCustom").value.trim();return c||document.getElementById("fco").value;}
+
+function renderMulti(id,opts){
+  var el=document.getElementById(id);
+  opts.forEach(function(o){
+    var sp=document.createElement("span");
+    sp.className="chip";
+    sp.textContent=o;
+    sp.setAttribute("data-val",o);
+    sp.addEventListener("click",function(){sp.classList.toggle("on");});
+    el.appendChild(sp);
+  });
+}
+renderMulti("fo",OCCS);
+renderMulti("fs",SEAS);
+
+function getMulti(id){var v=[];document.getElementById(id).querySelectorAll(".chip.on").forEach(function(c){v.push(c.dataset.val);});return v;}
+function setMulti(id,vals){document.getElementById(id).querySelectorAll(".chip").forEach(function(c){c.classList.toggle("on",(vals||[]).indexOf(c.dataset.val)>-1);});}
+
+function renderWash(w,t,d,s){
+  function mk(id,opts,sel){
+    var box=document.getElementById(id);
+    if(!box)return;
+    box.innerHTML="";
+    opts.forEach(function(o){
+      var el=document.createElement("span");
+      el.className="szchip"+(( sel||[]).indexOf(o)>-1?" on":"");
+      el.textContent=o;
+      el.addEventListener("click",function(){
+        el.classList.toggle("on");
+        if(id==="washChips"){
+          var on=box.querySelectorAll(".szchip.on");
+          var dt=["Dry clean only","Spot clean only","Do not wash"];
+          var allDry=on.length>0;
+          on.forEach(function(c){if(dt.indexOf(c.textContent)===-1)allDry=false;});
+          document.getElementById("tempSec").classList.toggle("hi",allDry);
+        }
+      });
+      box.appendChild(el);
+    });
+  }
+  mk("washChips",WASH,w);mk("tempChips",TEMP,t);mk("dryChips",DRY,d);mk("storeChips",STORE,s);
+}
+renderWash([],[],[],[]);
+
+function getWash(){
+  function gc(id){var v=[];var b=document.getElementById(id);if(b)b.querySelectorAll(".szchip.on").forEach(function(c){v.push(c.textContent);});return v;}
+  return{wash:gc("washChips"),temp:gc("tempChips"),dry:gc("dryChips"),store:gc("storeChips"),notes:document.getElementById("washCustom").value.trim()};
+}
+
+function goTab(t){
+  document.getElementById("tw").classList.toggle("hi",t!=="w");
+  document.getElementById("ta").classList.toggle("hi",t!=="a");
+  document.getElementById("to").classList.toggle("hi",t!=="o");
+  document.getElementById("nw").classList.toggle("on",t==="w");
+  document.getElementById("no").classList.toggle("on",t==="o");
+  if(t==="w")function openImg(src){document.getElementById("imgOverlayImg").src=src;document.getElementById("imgOverlay").classList.remove("hi");}
+function closeImg(){document.getElementById("imgOverlay").classList.add("hi");}
+renderW();
+  if(t==="o"){var h=items.length>0;document.getElementById("ob").disabled=!h;document.getElementById("on2").classList.toggle("hi",h);}
+}
+
+function renderW(){
+  var n=items.length;
+  document.getElementById("cnt").textContent=n+" item"+(n!==1?"s":"")+" catalogued";
+  document.getElementById("exd").textContent="Download all "+n+" item"+(n!==1?"s":"")+" as a backup file.";
+  var ph=document.getElementById("pills");
+  ph.innerHTML="";
+  var cats=["All"].concat(CATS);
+  cats.forEach(function(c){
+    var btn=document.createElement("button");
+    btn.className="pill"+(filterCat===c?" on":"");
+    btn.textContent=c;
+    btn.onclick=function(){filterCat=c;renderW();};
+    ph.appendChild(btn);
+  });
+  var filtered=filterCat==="All"?items:items.filter(function(i){return i.category===filterCat;});
+  var g=document.getElementById("grid");
+  var e=document.getElementById("emp");
+  if(!filtered.length){
+    g.innerHTML="";e.classList.remove("hi");
+    document.getElementById("ei").textContent=n===0?"":"";
+    document.getElementById("ep").textContent=n===0?"Your wardrobe is empty - tap + Add to start!":"No items in "+filterCat+".";
+  } else {
+    e.classList.add("hi");
+    g.innerHTML="";
+    filtered.forEach(function(item){
+      var card=document.createElement("div");
+      card.className="card";
+      card.setAttribute("data-id",item.id);
+      var imgH=item.image?"<img src=\""+item.image+"\" onerror=\"this.style.display='none'\" alt=\"\">":"";
+      card.innerHTML="<div class=\"cimg\"><span>&#128092;</span>"+imgH+"</div><div class=\"cbody\"><div class=\"cname\">"+item.name+"</div><div class=\"drow\"><span class=\"dot\" style=\"background:"+(CHEX[item.color]||"#ccc")+"\"></span><span class=\"dlbl\">"+item.color+(item.size?" - "+item.size:"")+"</span></div></div>";
+      card.onclick=function(){editIt(item.id);};
+      g.appendChild(card);
+    });
+  }
+}
+
+function setCat(cat){
+  fcEl.querySelectorAll(".szchip").forEach(function(x){x.classList.remove("on");});
+  fcEl.querySelectorAll(".szchip").forEach(function(x){if(x.textContent===cat)x.classList.add("on");});
+  renderSz(cat);
+}
+function setColor(c){
+  var std=COLS.indexOf(c)>-1;
+  if(std){document.getElementById("fco").value=c;document.getElementById("colorCustom").value="";}
+  else{document.getElementById("fco").selectedIndex=0;document.getElementById("colorCustom").value=c;}
+  upd();
+}
+
+function goAdd(){
+  editId=null;curImg=null;
+  document.getElementById("ftl").textContent="Add New Item";
+  document.getElementById("savebtn").textContent="Add to Wardrobe";
+  document.getElementById("fn").value="";
+  setCat("Tops");setColor("Black");
+  setMulti("fo",[]);setMulti("fs",[]);
+  document.getElementById("fno").value="";
+  document.getElementById("szCustom").value="";
+  document.getElementById("iu").value="";
+  document.getElementById("ie").classList.add("hi");
+  document.getElementById("db").classList.add("hi");
+  document.getElementById("dupb").classList.add("hi");
+  document.getElementById("pw").classList.add("hi");
+  document.getElementById("uz").classList.remove("hi");
+  document.getElementById("washCustom").value="";
+  renderWash([],[],[],[]);
+  goTab("a");
+}
+
+function editIt(id){
+  var item=null;
+  for(var i=0;i<items.length;i++){if(items[i].id==id){item=items[i];break;}}
+  if(!item)return;
+  editId=id;curImg=item.image||null;
+  document.getElementById("ftl").textContent="Edit Item";
+  document.getElementById("savebtn").textContent="Save Changes";
+  document.getElementById("fn").value=item.name;
+  setCat(item.category||"Tops");
+  setColor(item.color||"Black");
+  setMulti("fo",Array.isArray(item.occasion)?item.occasion:(item.occasion?[item.occasion]:[]));
+  setMulti("fs",Array.isArray(item.season)?item.season:(item.season?[item.season]:[]));
+  document.getElementById("fno").value=item.notes||"";
+  document.getElementById("szCustom").value=item.size||"";
+  document.getElementById("iu").value="";
+  document.getElementById("ie").classList.add("hi");
+  document.getElementById("db").classList.remove("hi");
+  document.getElementById("dupb").classList.remove("hi");
+  if(item.image){document.getElementById("pi").src=item.image;document.getElementById("pw").classList.remove("hi");document.getElementById("uz").classList.add("hi");}
+  else{document.getElementById("pw").classList.add("hi");document.getElementById("uz").classList.remove("hi");}
+  document.getElementById("washCustom").value=item.washNotes||"";
+  renderWash(item.wash||[],item.washTemp||[],item.dry||[],item.store||[]);
+  goTab("a");
+}
+
+function saveIt(){
+  var name=document.getElementById("fn").value.trim();
+  if(!name){toast("Please add a name.");return;}
+  var w=getWash();
+  var item={id:editId||Date.now(),name:name,category:getCat(),color:getColor(),occasion:getMulti("fo"),season:getMulti("fs"),notes:document.getElementById("fno").value.trim(),size:getSz(),wash:w.wash,washTemp:w.temp,dry:w.dry,store:w.store,washNotes:w.notes,image:curImg||null};
+  if(editId){for(var i=0;i<items.length;i++){if(items[i].id==editId){items[i]=item;break;}}toast("Updated!");}
+  else{items.push(item);toast("Added to wardrobe!");}
+  sv();goTab("w");
+}
+function delIt(){if(!editId)return;items=items.filter(function(i){return i.id!=editId;});sv();toast("Item removed.");goTab("w");}
+function dupIt(){
+  if(!editId)return;
+  var orig=null;for(var i=0;i<items.length;i++){if(items[i].id==editId){orig=items[i];break;}}
+  if(!orig)return;
+  editId=null;curImg=orig.image||null;
+  document.getElementById("ftl").textContent="Duplicate Item";
+  document.getElementById("savebtn").textContent="Save as New Item";
+  document.getElementById("fn").value=orig.name;
+  setCat(orig.category||"Tops");setColor(orig.color||"Black");
+  setMulti("fo",Array.isArray(orig.occasion)?orig.occasion:(orig.occasion?[orig.occasion]:[]));
+  setMulti("fs",Array.isArray(orig.season)?orig.season:(orig.season?[orig.season]:[]));
+  document.getElementById("fno").value=orig.notes||"";
+  document.getElementById("szCustom").value=orig.size||"";
+  document.getElementById("iu").value="";
+  document.getElementById("ie").classList.add("hi");
+  document.getElementById("db").classList.add("hi");
+  document.getElementById("dupb").classList.add("hi");
+  if(orig.image){document.getElementById("pi").src=orig.image;document.getElementById("pw").classList.remove("hi");document.getElementById("uz").classList.add("hi");}
+  else{document.getElementById("pw").classList.add("hi");document.getElementById("uz").classList.remove("hi");}
+  document.getElementById("washCustom").value=orig.washNotes||"";
+  renderWash(orig.wash||[],orig.washTemp||[],orig.dry||[],orig.store||[]);
+  toast("Duplicated - change what you need and save!");
+  goTab("a");
+}
+function handleF(inp){var file=inp.files[0];if(!file)return;var r=new FileReader();r.onload=function(e){curImg=e.target.result;document.getElementById("pi").src=curImg;document.getElementById("pw").classList.remove("hi");document.getElementById("uz").classList.add("hi");};r.readAsDataURL(file);}
+function rmImg(){curImg=null;document.getElementById("pw").classList.add("hi");document.getElementById("uz").classList.remove("hi");}
+
+async function doImp(){
+  var url=document.getElementById("iu").value.trim();
+  if(!url)return;
+  var btn=document.getElementById("ib");var errEl=document.getElementById("ie");
+  btn.disabled=true;btn.innerHTML="<span class='spin'></span>";errEl.classList.add("hi");
+  var name="",color="",category="",notes="";
+  try{
+    var parsed=new URL(url);
+    var skip=["womens","mens","categories","clothing","products","p","m","collections","category","shop","us","en"];
+    var parts=parsed.pathname.split("/").filter(function(p){return p.length>3&&skip.indexOf(p.toLowerCase())===-1;});
+    var slug=parts.length?parts[parts.length-1]:"";
+    var words=slug.split("-");for(var i=0;i<words.length;i++){words[i]=words[i].charAt(0).toUpperCase()+words[i].slice(1);}
+    name=words.join(" ");
+    var params={};parsed.searchParams.forEach(function(v,k){params[k]=v;});
+    var cr=(params.color_name||params.color||"").toLowerCase().replace(/-/g," ");
+    var cm={white:"White",black:"Black",navy:"Navy",cream:"White",ivory:"White",grey:"Gray",gray:"Gray",camel:"Beige",tan:"Beige",khaki:"Beige",red:"Red",pink:"Pink",green:"Green",blue:"Blue",yellow:"Yellow",orange:"Orange",purple:"Purple",brown:"Brown",multi:"Multi",olive:"Green",sage:"Green",blush:"Pink",rose:"Pink",burgundy:"Red",rust:"Orange",mustard:"Yellow",lavender:"Purple",teal:"Blue",sand:"Beige"};
+    color=cm[cr]||cm[cr.split(" ")[0]]||"";
+    var pf=parsed.pathname.toLowerCase();
+    if(pf.indexOf("pants")>-1||pf.indexOf("shorts")>-1||pf.indexOf("skirt")>-1||pf.indexOf("jeans")>-1||pf.indexOf("trouser")>-1)category="Bottoms";
+    else if(pf.indexOf("dress")>-1||pf.indexOf("romper")>-1||pf.indexOf("jumpsuit")>-1)category="Dresses";
+    else if(pf.indexOf("jacket")>-1||pf.indexOf("coat")>-1||pf.indexOf("blazer")>-1||pf.indexOf("outerwear")>-1)category="Outerwear";
+    else if(pf.indexOf("shoe")>-1||pf.indexOf("boot")>-1||pf.indexOf("sandal")>-1||pf.indexOf("sneaker")>-1)category="Shoes";
+    else if(pf.indexOf("bag")>-1||pf.indexOf("belt")>-1||pf.indexOf("accessory")>-1)category="Accessories";
+    else category="Tops";
+    var nl=name.toLowerCase();
+    if(nl.indexOf("linen")>-1)notes="100% linen";
+    else if(nl.indexOf("cashmere")>-1)notes="Cashmere knit";
+    else if(nl.indexOf("silk")>-1)notes="Silk fabric";
+  }catch(e){}
+  try{
+    var store=url.indexOf("jcrew")>-1?"J.Crew":url.indexOf("quince")>-1?"Quince":url.indexOf("zara")>-1?"Zara":"";
+    var q=(name||"")+(color?" in "+color:"")+(store?" "+store:"");
+    var payload={model:"claude-sonnet-4-20250514",max_tokens:400,tools:[{type:"web_search_20250305",name:"web_search"}],messages:[{role:"user",content:"Search for this clothing product: "+q+" (URL: "+url+"). Reply with ONLY valid JSON: {\"name\": \"product name\", \"image\": \"direct image url or empty\", \"notes\": \"material in 6 words\"}"}]};
+    var r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    var d=await r.json();
+    var txt="";if(d.content){for(var i=0;i<d.content.length;i++){if(d.content[i].type==="text")txt+=d.content[i].text;}}
+    var s=txt.indexOf("{");var e2=txt.lastIndexOf("}");
+    if(s>-1&&e2>s){
+      var ai=JSON.parse(txt.slice(s,e2+1));
+      if(ai.name)document.getElementById("fn").value=ai.name;else if(name)document.getElementById("fn").value=name;
+      if(ai.image&&ai.image.length>4){curImg=ai.image;document.getElementById("pi").src=ai.image;document.getElementById("pw").classList.remove("hi");document.getElementById("uz").classList.add("hi");}
+      if(ai.notes&&!notes)notes=ai.notes;
+    }else if(name){document.getElementById("fn").value=name;}
+  }catch(e2){if(name)document.getElementById("fn").value=name;}
+  if(category)setCat(category);
+  if(color)setColor(color);
+  if(notes)document.getElementById("fno").value=notes;
+  if(!document.getElementById("fn").value){errEl.textContent="Could not import. Try filling in details manually.";errEl.classList.remove("hi");}
+  else{document.getElementById("iu").value="";toast("Imported! Review and save.");}
+  btn.disabled=false;btn.textContent="Import";
+}
+
+function mkOut(){
+  if(!items.length)return null;
+  var w=document.getElementById("ws").value;
+  var occ=document.getElementById("os").value;
+  var seas=WS[w]||[];
+  function filt(cats){
+    var pool=items.filter(function(i){return cats.indexOf(i.category)>-1;});
+    if(occ){pool=pool.filter(function(i){var io=Array.isArray(i.occasion)?i.occasion:(i.occasion?[i.occasion]:[]);return io.length===0||io.indexOf(occ)>-1;});}
+    if(seas.length){pool=pool.filter(function(i){var is=Array.isArray(i.season)?i.season:(i.season?[i.season]:[]);return is.indexOf("All Season")>-1||is.filter(function(s){return seas.indexOf(s)>-1;}).length>0;});}
+    return pool;
+  }
+  function pick(a){return a.length?a[Math.floor(Math.random()*a.length)]:null;}
+  var tops=filt(["Tops"]),bots=filt(["Bottoms"]),drs=filt(["Dresses"]),outr=filt(["Outerwear"]),shs=filt(["Shoes"]),acc=filt(["Accessories"]);
+  var res=[];
+  if(drs.length&&Math.random()>.5){res.push(pick(drs));}else if(tops.length&&bots.length){res.push(pick(tops));res.push(pick(bots));}else if(tops.length){res.push(pick(tops));}else if(drs.length){res.push(pick(drs));}
+  if(w==="Cold"||w==="Rainy"||w==="Snowy"){var c=pick(outr);if(c)res.push(c);}else if(outr.length&&Math.random()>.6){res.push(pick(outr));}
+  if(shs.length)res.push(pick(shs));
+  if(acc.length&&Math.random()>.4)res.push(pick(acc));
+  return res.filter(Boolean);
+}
+async function doOut(){
+  var btn=document.getElementById("ob");
+  btn.disabled=true;btn.innerHTML="<span class='spin'></span> Styling...";
+  document.getElementById("st").classList.add("hi");document.getElementById("ol").innerHTML="";
+  var outfit=mkOut();
+  if(!outfit||!outfit.length){btn.disabled=false;btn.textContent="Suggest an Outfit";return;}
+  var ol=document.getElementById("ol");ol.innerHTML="";
+  outfit.forEach(function(item){
+    var div=document.createElement("div");div.className="oi";
+    var imgH=item.image?"<img src='"+item.image+"' onerror='this.style.display=\"none\"' onclick='openImg(this.src)' style='cursor:zoom-in' alt=''>":""
+    div.innerHTML="<div class=\"oth\"><span>&#128092;</span>"+imgH+"</div><div class=\"oin\"><div class=\"onm\">"+item.name+"</div><div class=\"drow\"><span class=\"dot\" style=\"background:"+(CHEX[item.color]||"#ccc")+"\"></span><span class=\"dlbl\">"+item.color+" - "+item.category+"</span></div>"+(item.notes?"<div style=\"font-size:11px;color:#bbb;margin-top:2px\">"+item.notes+"</div>":"")+"</div>";
+    ol.appendChild(div);
+  });
+  btn.disabled=false;btn.textContent="Shuffle Outfit";
+  try{
+    var desc="";for(var i=0;i<outfit.length;i++){desc+=(i>0?", ":"")+outfit[i].name+" ("+outfit[i].category+", "+outfit[i].color+")";}
+    var w=document.getElementById("ws").value;var occ=document.getElementById("os").value||"everyday";
+    var r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:200,messages:[{role:"user",content:"Personal stylist: warm 2-sentence tip for outfit: "+desc+". Weather: "+w+", Occasion: "+occ+"."}]})});
+    var d=await r.json();var tip=null;
+    if(d.content){for(var i=0;i<d.content.length;i++){if(d.content[i].type==="text"){tip=d.content[i].text;break;}}}
+    if(tip){document.getElementById("sp").textContent=tip;document.getElementById("st").classList.remove("hi");}
+  }catch(e){}
+}
+
+function openBkp(){document.getElementById("bov").classList.remove("hi");}
+function closeBkp(){document.getElementById("bov").classList.add("hi");hideWarn();}
+document.getElementById("bov").addEventListener("click",function(e){if(e.target===document.getElementById("bov"))closeBkp();});
+function showWarn(){document.getElementById("rn").classList.add("hi");document.getElementById("rw").classList.remove("hi");}
+function hideWarn(){document.getElementById("rn").classList.remove("hi");document.getElementById("rw").classList.add("hi");}
+function doExp(){
+  var blob=new Blob([JSON.stringify({version:2,exported:new Date().toISOString(),items:items},null,2)],{type:"application/json"});
+  var u=URL.createObjectURL(blob);var a=document.createElement("a");
+  a.href=u;a.download="my-wardrobe-"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(u);
+  toast("Wardrobe exported!");
+}
+function doRest(inp){
+  var file=inp.files[0];if(!file)return;
+  var rd=new FileReader();
+  rd.onload=function(e){
+    try{var p=JSON.parse(e.target.result);var rs=p.items||p;if(!Array.isArray(rs))throw new Error();items=rs;sv();closeBkp();toast("Restored "+items.length+" items!");renderW();}
+    catch(e){toast("Could not read that file.");}
+  };
+  rd.readAsText(file);inp.value="";
+}
+renderW();
+function triggerFi(){document.getElementById("fi").click();}
+function triggerRi(){document.getElementById("ri").click();}
+
+</script>
+</body>
+</html>
